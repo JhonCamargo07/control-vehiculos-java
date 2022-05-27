@@ -1,13 +1,17 @@
 package controllers;
 
 import dao.UsuarioDAO;
+import dao.VehiculoDAO;
 import domain.UsuarioVO;
+import domain.VehiculoVO;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -15,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "UsuarioController", urlPatterns = {"/Usuario"})
 public class UsuarioController extends HttpServlet {
+
+    private static String PASSWORD_ADMIN_ORIGINAL = "JC*bN1mP6wE%jM-oO507";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,24 +39,25 @@ public class UsuarioController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        if (request.getParameter("inputUsuario").equals("") && request.getParameter("inputPassword").equals("")) {
-            request.setAttribute("mensajeOperacion", "Mal!");
+//        response.setContentType("text/html;charset=UTF-8");
+        if (request.getParameter("inputUsuario").equals("") || request.getParameter("inputPassword").equals("")) {
+            request.setAttribute("mensajeOperacion", "Los datos no pueden ser nulos");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             UsuarioVO usuarioVo = null;
             // Recibir datos de la vista
+            String idRol = request.getParameter("rol");
             String idUsuario = request.getParameter("idUsuario");
             String usuario = request.getParameter("inputUsuario");
             String password = request.getParameter("inputPassword");
             int accion = Integer.parseInt(request.getParameter("accion"));
 
-            if(idUsuario != null){
+            if (idUsuario != null) {
                 System.out.println("Entró con el id");
                 usuarioVo = new UsuarioVO(idUsuario, usuario, password);
-            }else{
+            } else {
                 // Instancia de VO
-                usuarioVo = new UsuarioVO(usuario, password);
+                usuarioVo = new UsuarioVO(idRol, usuario, password);
             }
 
             // DAO
@@ -59,50 +66,80 @@ public class UsuarioController extends HttpServlet {
             // Administrar operadores
             switch (accion) {
                 case 1: // Insert
-                    if(usuarioDao.insert(usuarioVo)){
-                        response.sendRedirect("menu.jsp");
-                    }else{
-                        request.setAttribute("insertUsuario", usuario);
-                        request.setAttribute("insertPassword", password);
-                        request.setAttribute("mensajeOperacion", "Ocurrio un error al registrar el usuario");
-                        request.getRequestDispatcher("index.jsp").forward(request, response);
+                    if (!idRol.equals("1")) {
+                        String passwordAdmin = request.getParameter("passAdmin");
+                        if (!PASSWORD_ADMIN_ORIGINAL.equals(passwordAdmin)) {
+                            request.setAttribute("insertUsuario", usuario);
+                            request.setAttribute("insertPassword", password);
+                            request.setAttribute("mensajeOperacion", "La contraseña de administrador es incorrecta");
+                            request.getRequestDispatcher("index.jsp").forward(request, response);
+                        } else {
+                            if (usuarioDao.insert(usuarioVo)) {
+                                response.sendRedirect("menu.jsp");
+                            } else {
+                                request.setAttribute("insertUsuario", usuario);
+                                request.setAttribute("insertPassword", password);
+                                request.setAttribute("mensajeOperacion", "Ocurrio un error al registrar el usuario");
+                                request.getRequestDispatcher("index.jsp").forward(request, response);
+                            }
+                        }
+                    } else {
+                        if (usuarioDao.insert(usuarioVo)) {
+                            response.sendRedirect("menu.jsp");
+                        } else {
+                            request.setAttribute("insertUsuario", usuario);
+                            request.setAttribute("insertPassword", password);
+                            request.setAttribute("mensajeOperacion", "Ocurrio un error al registrar el usuario");
+                            request.getRequestDispatcher("index.jsp").forward(request, response);
+                        }
                     }
                     break;
                 case 2: // Login
-                    if(usuarioDao.login(usuario, password)){
+                    UsuarioVO usuVo = usuarioDao.login(usuario, password);
+                    if (usuVo != null) {
+                        HttpSession sesion = request.getSession();
+                        sesion.setAttribute("idUsuario", usuVo.getIdUsuario());
+                        sesion.setAttribute("idRol", usuVo.getIdRol());
+                        sesion.setAttribute("usuLogin", usuVo.getUsuLogin());
+                        sesion.setAttribute("usuPassword", usuVo.getUsuPassword());
+                        sesion.setAttribute("datNombre", usuVo.getDatNombre());
+                        sesion.setAttribute("datApellido", usuVo.getDatApellido());
+                        sesion.setAttribute("datTelefono", usuVo.getDatTelefono());
+                        sesion.setAttribute("datCorreo", usuVo.getDatCorreo());
+                        
+                        List<VehiculoVO> categorias = new VehiculoDAO().listarCategorias();
+                        System.out.println("clientes = " + categorias);
+                        sesion.setAttribute("categorias", categorias);
+                        sesion.setAttribute("totalCategorias", categorias.size());
+                        
                         response.sendRedirect("menu.jsp");
-                    }else{
+                    } else {
                         request.setAttribute("loginUsuario", usuario);
                         request.setAttribute("loginPassword", password);
                         request.setAttribute("mensajeOperacion", "Los datos suministrados son incorrectos");
                         request.getRequestDispatcher("index.jsp").forward(request, response);
                     }
                     break;
-//                case 1: // Login
-//                    if(usuarioDao.login(usuario, password)){
-////                       sesion.setAttribute("id", this);
-////                        response.sendRedirect("menu.jsp");
-//                        request.setAttribute("mensajeOperacion", "Bienvenido!");
-//                        request.getRequestDispatcher("index.jsp").forward(request, response);
-//                    }else{
-//                    }
-//                    break;
-//                case 2: // Insertar
-//                    if(usuarioDao.insertar()){
-//                        usuarioDao.login(usuarioVo.getUsuLogin(), usuarioVo.getUsuPassword());
-////                        response.sendRedirect("menu.jsp");
-//                        request.setAttribute("mensajeOperacion", "Se agregó ");
-//                        request.getRequestDispatcher("index.jsp").forward(request, response);
-//                    }else{
-//                        request.setAttribute("mensajeOperacion", "Ocurrió un error al registrar el usuario");
-//                        request.getRequestDispatcher("index.jsp").forward(request, response);
-//                    }
-//                    break;
-            }
-//            request.setAttribute("mensajeOperacion", "Welcome!");
-//            request.getRequestDispatcher("index.jsp").forward(request, response);
+                case 3: // Logout
+                    HttpSession sesion = request.getSession();
+                    // Cerrar sesion
+                    sesion.invalidate();
 
+                    request.setAttribute("mensajeOperacion", "Sesion cerrada exitosamente!");
+                    request.getRequestDispatcher("index.jsp").forward(request, response);
+
+            }
         }
+    }
+
+    private void accionDefault(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        List<VehiculoVO> categorias = new VehiculoDAO().listarCategorias();
+        System.out.println("clientes = " + categorias);
+        HttpSession sesion = request.getSession();
+        sesion.setAttribute("categorias", categorias);
+        sesion.setAttribute("totalCategorias", categorias.size());
+//        request.getRequestDispatcher("clientes.jsp").forward(request, response);
+//        response.sendRedirect("clientes.jsp");
     }
 
 }

@@ -1,17 +1,40 @@
-<%-- 
-    Document   : menu
-    Created on : 25 may. 2022, 17:25:35
-    Author     : Camargo
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head>
+    <jsp:include page="validarSesion.jsp" />
+    <jsp:include page="/WEB-INF/paginas/comunes/head.jsp" />
     <body>
-        <h1>Hello World!</h1>
+
+        <!-- Header -->
+        <jsp:include page="/WEB-INF/paginas/comunes/header.jsp" />        
+        <!-- /Header -->
+        
+        
+        <%
+            HttpSession sesion = request.getSession();
+            String idRol = (String) sesion.getAttribute("idRol");
+            if( idRol.equals("1") ){
+                response.sendRedirect("comprador/");
+            }else{
+                response.sendRedirect("vendedor/");
+            }
+        
+        %>
+
+        <form action="${pageContext.request.contextPath}/Usuario" method="POST">
+            <input type="hidden" name="inputUsuario" value="${usuLogin}">
+            <input type="hidden" name="inputPassword" value="${usuPassword}">
+            <input type="hidden" name="accion" value="3">
+            <button type="submit" class="btn btn-info">Cerrar sesión</button>
+        </form>
+
+        <!-- Footer -->
+        <jsp:include page="/WEB-INF/paginas/comunes/footer.jsp" />        
+        <!-- /Footer -->
+        
+        <!-- scripts -->
+        <jsp:include page="/WEB-INF/paginas/comunes/link-js.jsp" />        
+        <!-- /scripts -->
+        
     </body>
 </html>

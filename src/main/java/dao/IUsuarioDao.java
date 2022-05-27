@@ -7,7 +7,7 @@ import java.sql.SQLException;
  *
  * @author Camargo
  */
-public interface IUsuarioDao {
+public interface IUsuarioDAO {
     
     boolean insert(UsuarioVO usuarioVo) throws SQLException;
     

@@ -5,14 +5,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.Conexion;
 import domain.UsuarioVO;
-import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
 /**
  *
  * @author Camargo
  */
-public class UsuarioDAO extends Conexion implements IUsuarioDao{
+public class UsuarioDAO extends Conexion implements IUsuarioDAO{
     // Variables necesarias para la funcionalidad de la aplicacion
     private Connection conn = null;
     private PreparedStatement stmt = null;
@@ -31,9 +29,12 @@ public class UsuarioDAO extends Conexion implements IUsuarioDao{
         
     }
     
-    public boolean login(String usuario, String password) {
+    public UsuarioVO login(String usuario, String password) {
         
-        sql = "SELECT * FROM USUARIO WHERE BINARY USULOGIN = ? AND BINARY USUPASSWORD = ?";
+        UsuarioVO usuarioLoginVo = null;
+        
+//        sql = "SELECT * FROM USUARIO INNER JOIN datospersonales ON datospersonales.USUID = usuario.USUID INNER JOIN USUARIO_ROL ON USUARIO_ROL.USUID = USUARIO.USUID INNER JOIN ROL ON ROL.ROLID = USUARIO_ROL.ROLID  WHERE BINARY USULOGIN = ? AND BINARY USUPASSWORD = ?";
+        sql = "SELECT USUARIO.USUID, ROL.ROLID, USULOGIN, USUPASSWORD, DATNOMBRE, DATAPELLIDO, DATELEFONO, DATCORREO FROM USUARIO INNER JOIN datospersonales as datos ON datos.USUID = usuario.USUID INNER JOIN USUARIO_ROL as usuRol ON usuRol.USUID = usuario.USUID INNER JOIN ROL ON ROL.ROLID = usuRol.ROLID  WHERE BINARY USULOGIN = ? AND BINARY USUPASSWORD = ?";
         
         try {
             conn = Conexion.getConnection();
@@ -44,7 +45,17 @@ public class UsuarioDAO extends Conexion implements IUsuarioDao{
             rs = stmt.executeQuery();
             
             if(rs.next()) {
-                operacionExitosa = true;
+                String idUsuario = rs.getString("USUID");
+                String idRol = rs.getString("ROLID");
+                String usuLogin = rs.getString("USULOGIN");
+                String usuPassword = rs.getString("USUPASSWORD");
+                String datNombre = rs.getString("DATNOMBRE");
+                String datApellido = rs.getString("DATAPELLIDO");
+                String datTelefono = rs.getString("DATELEFONO");
+                String datCorreo = rs.getString("DATCORREO");
+                
+                
+                usuarioLoginVo = new UsuarioVO(idUsuario, idRol, usuLogin, usuPassword, datNombre, datApellido, datTelefono, datCorreo);
             }
             
         } catch (SQLException ex) {
@@ -57,8 +68,13 @@ public class UsuarioDAO extends Conexion implements IUsuarioDao{
             Conexion.close(conn);
         }
         
-        return operacionExitosa;
+        return usuarioLoginVo;
     }
+    
+//    public static boolean validarSesion(Session sesion){
+//        httpSession sesion = 
+//        if(session.)
+//    }
 
     @Override
     public boolean insert(UsuarioVO usuarioVo){
@@ -68,11 +84,28 @@ public class UsuarioDAO extends Conexion implements IUsuarioDao{
         try {
             // Conectarnos a la base de datos
             conn = Conexion.getConnection();
-            // Ejecutar la insercion
+            // Insertar usuario en la tabla usuario
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, usuarioVo.getUsuLogin());
             stmt.setString(2, usuarioVo.getUsuPassword());
             stmt.executeUpdate();
+            
+            // Consultar el ultimo usuario registrado (el que acabos de insertar)
+            sql = "SELECT * FROM usuario ORDER BY USUID DESC LIMIT 1";
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            System.out.println("Se seleccionó el ultimo usuario");
+            
+            if(rs.next()) {
+                UsuarioVO usuarioVo2 = new UsuarioVO(rs.getString("USUID"));
+                
+                sql = "INSERT INTO usuario_rol (ROLID, USUID) VALUES (?,?)";
+                stmt = conn.prepareStatement(sql);
+                stmt.setString(1, usuarioVo.getIdRol());
+                stmt.setString(2, usuarioVo2.getIdUsuario());
+                stmt.executeUpdate();
+            }
+            
             
             // Si logra insertar el usuario retorna true
             operacionExitosa = true;
