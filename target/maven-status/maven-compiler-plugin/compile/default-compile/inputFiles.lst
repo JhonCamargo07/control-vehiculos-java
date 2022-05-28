@@ -1,5 +1,9 @@
-C:\cursos\java\JSP\manejo_vehiculos\src\main\java\dao\IUsuarioDao.java
+C:\cursos\java\JSP\manejo_vehiculos\src\main\java\controllers\VehiculoController.java
+C:\cursos\java\JSP\manejo_vehiculos\src\main\java\dao\IVehiculoDAO.java
+C:\cursos\java\JSP\manejo_vehiculos\src\main\java\dao\IUsuarioDAO.java
 C:\cursos\java\JSP\manejo_vehiculos\src\main\java\dao\UsuarioDAO.java
+C:\cursos\java\JSP\manejo_vehiculos\src\main\java\domain\VehiculoVO.java
+C:\cursos\java\JSP\manejo_vehiculos\src\main\java\dao\VehiculoDAO.java
 C:\cursos\java\JSP\manejo_vehiculos\src\main\java\domain\UsuarioVO.java
 C:\cursos\java\JSP\manejo_vehiculos\src\main\java\util\Conexion.java
 C:\cursos\java\JSP\manejo_vehiculos\src\main\java\controllers\UsuarioController.java

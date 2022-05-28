@@ -107,8 +107,8 @@ public class UsuarioController extends HttpServlet {
                         sesion.setAttribute("datTelefono", usuVo.getDatTelefono());
                         sesion.setAttribute("datCorreo", usuVo.getDatCorreo());
                         
-                        List<VehiculoVO> categorias = new VehiculoDAO().listarCategorias();
-                        System.out.println("clientes = " + categorias);
+                        VehiculoDAO vehDao = new VehiculoDAO();
+                        List<VehiculoVO> categorias = vehDao.listarCategorias();
                         sesion.setAttribute("categorias", categorias);
                         sesion.setAttribute("totalCategorias", categorias.size());
                         
@@ -127,19 +127,10 @@ public class UsuarioController extends HttpServlet {
 
                     request.setAttribute("mensajeOperacion", "Sesion cerrada exitosamente!");
                     request.getRequestDispatcher("index.jsp").forward(request, response);
-
+                default:
+                    response.sendRedirect("vendedor/");
             }
         }
-    }
-
-    private void accionDefault(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        List<VehiculoVO> categorias = new VehiculoDAO().listarCategorias();
-        System.out.println("clientes = " + categorias);
-        HttpSession sesion = request.getSession();
-        sesion.setAttribute("categorias", categorias);
-        sesion.setAttribute("totalCategorias", categorias.size());
-//        request.getRequestDispatcher("clientes.jsp").forward(request, response);
-//        response.sendRedirect("clientes.jsp");
     }
 
 }

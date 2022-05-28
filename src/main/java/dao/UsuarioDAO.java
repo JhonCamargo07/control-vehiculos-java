@@ -56,6 +56,7 @@ public class UsuarioDAO extends Conexion implements IUsuarioDAO{
                 
                 
                 usuarioLoginVo = new UsuarioVO(idUsuario, idRol, usuLogin, usuPassword, datNombre, datApellido, datTelefono, datCorreo);
+                operacionExitosa = true;
             }
             
         } catch (SQLException ex) {

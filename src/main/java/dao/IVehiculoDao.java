@@ -10,7 +10,7 @@ import java.sql.SQLException;
  */
 public interface IVehiculoDAO {
     
-    boolean insert(VehiculoVO vehiculoVo, UsuarioVO usuarioVo) throws SQLException;
+    boolean insert(VehiculoVO vehiculoVo, String idUsuario) throws SQLException;
     
     boolean update(VehiculoVO vehiculoVo) throws SQLException;
     

@@ -13,20 +13,20 @@
         <jsp:include page="/WEB-INF/paginas/comunes/navbar.jsp" />        
         <!-- /navbar -->
 
-        <h1>Hello vendedor ${datNombre} ${datApellido}!</h1>
-
         <section>
             <div class="container">
                 <div class="row">
                     <div class="col-md-3"></div>
                     <div class="col-md-6">
-                        <h3 class="text-center mt-2 mb-4">Registrar vehiculo</h3>
+                        <h3 class="text-center my-4 fw-bold">Registrar vehiculo</h3>
                         <form action="${pageContext.request.contextPath}/Vehiculo" method="POST" class="was-validated">
                             <div class="row mb-2">
                                 <div class="col">
                                     <div class="form-outline">
                                         <input type="text" id="form6Example1" name="inputPlaca" class="form-control" value="" required />
                                         <label class="form-label" for="form6Example1">Placa <span class="text-danger">*</span></label>
+                                        <input type="hidden" value="${totalCategorias}" name="totalCategorias">
+                                        <input type="hidden" value="1" name="accion">
                                     </div>
                                 </div>
                                 <div class="col">
@@ -64,22 +64,12 @@
                                 </select>
                                 <label class="form-label" for="form6Example5">Estado <span class="text-danger">*</span></label>
                             </div>
-                            
-                            <!-- Iteramos cada elemento de la lista de clientes -->
-                            <c:forEach var="categoria" items="${categorias}" varStatus="status">
-                                <tr>
-                                    <td>${categoria.nombreCategoria}</td>
-                                    <td>hOLA</td>
-                                </tr>
-                            </c:forEach>
 
                             <div class="form-outline mb-2">
                                 <select class="form-select" name="inputCategoria" aria-label="Default select example" required>
-                                    
-                                    
-                                    
-                                    
-                                    
+                                    <c:forEach var="categoria" items="${categorias}" varStatus="status">
+                                    <option value="${categoria.categoId}">${categoria.nombreCategoria}</option> 
+                                    </c:forEach>
                                 </select>
                                 <label class="form-label" for="form6Example5">Categoría <span class="text-danger">*</span></label>
                             </div>

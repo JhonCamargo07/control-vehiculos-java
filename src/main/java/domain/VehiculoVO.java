@@ -12,7 +12,7 @@ public class VehiculoVO {
     private String vehModelo;
     private String vehMarca;
     private String vehEstado;
-    private double vehPrecio;
+    private String vehPrecio;
 
     public VehiculoVO() {
     }
@@ -39,7 +39,7 @@ public class VehiculoVO {
         this.nombreCategoria = nombreCategoria;
     }
     
-    public VehiculoVO(String vehPlaca, String datosId, String categoId, String vehModelo, String vehMarca, String vehEstado, double vehPrecio) {
+    public VehiculoVO(String vehPlaca, String datosId, String categoId, String vehModelo, String vehMarca, String vehEstado, String vehPrecio) {
         this.vehPlaca = vehPlaca;
         this.datosId = datosId;
         this.categoId = categoId;
@@ -97,11 +97,11 @@ public class VehiculoVO {
         this.vehEstado = vehEstado;
     }
 
-    public double getVehPrecio() {
+    public String getVehPrecio() {
         return this.vehPrecio;
     }
 
-    public void setVehPrecio(double vehPrecio) {
+    public void setVehPrecio(String vehPrecio) {
         this.vehPrecio = vehPrecio;
     }
 
