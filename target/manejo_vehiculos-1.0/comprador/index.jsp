@@ -1,9 +1,11 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<fmt:setLocale value="es_CO" />
 <%@page import="domain.VehiculoVO"%>
 <%@page import="dao.VehiculoDAO"%>
 <%@page import="java.util.List"%>
 <jsp:include page="../validarSesion.jsp" />
+<jsp:include page="../validarRolComprador.jsp" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -36,6 +38,35 @@
                                 <button type="submit" name="buscarVehiculo" class="btn btn-primary btn-block">Buscar vehiculo</button>
                             </div>
                         </form>
+
+                        <%
+                            if (request.getAttribute("vehiculos") != null) {
+                        %>
+                        <p class="fw-bold">Vehiculos tipo <?php echo $nombreCategoria; ?></p>
+                        <table class="table table-striped mb-5 text-center mx-0">
+                            <tr class="table-dark">
+                                <th scope="col">#</th>
+                                <th scope="col">Modelo</th>
+                                <th scope="col">Color</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Vendedor</th>
+                            </tr>
+                            <c:forEach var="vehiculo" items="${vehiculos}" varStatus="status">
+                            <tr>
+                                <td scope="row" class="align-items-center">${status.count}</td>
+                                <td scope="row" class="align-items-center">${vehiculo.vehModelo}</td>
+                                <td class="align-items-center">Gris</td>
+                                <td class="align-items-center"><fmt:formatNumber value="${vehiculo.vehPrecio}" type="currency" /></td>
+                                <td class="text-center align-items-center"><a href="datos-vendedor.jsp?id=${vehiculo.datosId}" ><button class="btn btn-info"><i class="fas fa-user-tie me-1"></i>Ver datos</button></a></td>
+                            </tr>
+                            </c:forEach>
+
+                        </table>
+                        <%
+                            }
+                        %>
+
+
                         <%
                             if (request.getAttribute("mensajeOperacion") != null) {
                         %>

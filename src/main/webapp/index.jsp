@@ -27,7 +27,7 @@
                             <label class="form-check-label" for="exampleCheck1">Check me out</label>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Ingresar</button>
+                            <button type="submit" class="btn btn-primary my-2">Ingresar</button>
                         </div>
                     </form>
                 </div>

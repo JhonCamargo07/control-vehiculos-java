@@ -3,6 +3,7 @@ package controllers;
 import dao.VehiculoDAO;
 import domain.VehiculoVO;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -80,11 +81,19 @@ public class VehiculoController extends HttpServlet {
                     }
                     break;
                 case 2: // Listar vehiculos
+                    List<VehiculoVO> vehiculos = vehiculoDao.listarVehiculos(categoria);
                     
+                    if(vehiculos != null || vehiculos.isEmpty()){
+                        request.setAttribute("idCategoria", categoria);
+                        request.setAttribute("vehiculos", vehiculos);
+                        request.setAttribute("totalVehiculos", vehiculos.size());
+                        request.getRequestDispatcher("comprador/").forward(request, response);
+                    }else{
+                        request.setAttribute("mensajeOperacion", "La categoria no existe");
+                        request.getRequestDispatcher("comprador/").forward(request, response);
+                    }
                     
-                    
-                    request.setAttribute("mensajeOperacion", "Vehiculo selecionado");
-                    request.getRequestDispatcher("comprador/").forward(request, response);
+//                    <% if (request.getAttribute("idCategoria") == request.getAttribute("categoId")) {out.print("selected");} %>
                 default:
                     response.sendRedirect("vendedor/");
                     break;

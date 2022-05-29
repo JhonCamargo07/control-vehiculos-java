@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-self-auto">
                 <li class="nav-item">
-                    <a class="nav-link active fw-bold m-1" aria-current="page" href="">Inicio</a>
+                    <a class="nav-link active fw-bold m-1" aria-current="page" href="${pageContext.request.contextPath}/vendedor/">Inicio</a>
                 </li>
                 <%
                     HttpSession sesion = request.getSession();
@@ -17,8 +17,8 @@
                 <li class="nav-item dropdown m-1">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Rol</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="../vendedor">Vendedor</a></li>
-                        <li><a class="dropdown-item" href="../comprador">Comprador</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/vendedor">Vendedor</a></li>
+                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/comprador">Comprador</a></li>
                     </ul>
                 </li>
 

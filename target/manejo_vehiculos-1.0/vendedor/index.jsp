@@ -4,6 +4,7 @@
 <%@page import="dao.VehiculoDAO"%>
 <%@page import="java.util.List"%>
 <jsp:include page="../validarSesion.jsp" />
+<jsp:include page="../validarRolVendedor.jsp" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

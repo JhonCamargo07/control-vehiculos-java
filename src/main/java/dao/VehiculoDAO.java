@@ -60,24 +60,28 @@ public class VehiculoDAO extends Conexion implements IVehiculoDAO {
 
         return categorias;
     }
-    
-    public List<VehiculoVO> listarVehiculos(String idCatalogo) {
+
+    public List<VehiculoVO> listarVehiculos(int idCatalogo) {
         List<VehiculoVO> categorias = new ArrayList();
 
-        sql = "SELECT * FROM vehiculo as veh INNER JOIN categoria as cat ON veh.CATID = cat.CATID WHERE cat.CATID = ?";
+        sql = "SELECT * FROM vehiculo as veh INNER JOIN categoria AS cat ON veh.CATID = cat.CATID INNER JOIN datosPersonales AS datos ON datos.DATID = veh.DATID INNER JOIN usuario as usu ON usu.USUID = datos.USUID WHERE cat.CATID = ?";
 
         try {
             conn = Conexion.getConnection();
 
             stmt = conn.prepareStatement(sql);
-            stmt.setString(1, idCatalogo);
+            stmt.setInt(1, idCatalogo);
             rs = stmt.executeQuery();
 
             while (rs.next()) {
+                String modelo = rs.getString("VEHMODELO");
+                String idVendedor = rs.getString("USUID");
+//                String color = rs.getString("VEHCOLOR");
+                String precio = rs.getString("VEHPRECIO");
                 String idCategoria = rs.getString("CATID");
                 String nombreCategoria = rs.getString("CATIPO");
 
-                VehiculoVO vehiculoVo = new VehiculoVO("", "", idCategoria, nombreCategoria);
+                VehiculoVO vehiculoVo = new VehiculoVO("", idVendedor, idCategoria, modelo, "", "", precio);
 
                 categorias.add(vehiculoVo);
                 System.out.println(categorias);
