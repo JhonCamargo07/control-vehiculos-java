@@ -1,7 +1,7 @@
+<jsp:include page="validarSesion.jsp" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <jsp:include page="validarSesion.jsp" />
     <jsp:include page="/WEB-INF/paginas/comunes/head.jsp" />
     <body>
 
@@ -15,8 +15,10 @@
             String idRol = (String) sesion.getAttribute("idRol");
             if( idRol.equals("1") ){
                 response.sendRedirect("comprador/");
-            }else{
+            }else if( idRol.equals("2") || idRol.equals("3") ){
                 response.sendRedirect("vendedor/");
+            }else{
+                response.sendRedirect("index.jsp");
             }
         
         %>

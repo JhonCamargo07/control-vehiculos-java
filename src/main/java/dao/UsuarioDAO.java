@@ -5,6 +5,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.Conexion;
 import domain.UsuarioVO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -72,10 +74,64 @@ public class UsuarioDAO extends Conexion implements IUsuarioDAO{
         return usuarioLoginVo;
     }
     
-//    public static boolean validarSesion(Session sesion){
-//        httpSession sesion = 
-//        if(session.)
-//    }
+    public boolean existeUsuarioEnBD(String nombreUsuario) {
+        boolean existeUsuarioEnDb = false;
+        sql = "SELECT USULOGIN FROM usuario WHERE USULOGIN = ?";
+
+        try {
+            conn = Conexion.getConnection();
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, nombreUsuario);
+            rs = stmt.executeQuery();
+
+            if (rs.next()){
+                existeUsuarioEnDb = true;
+            }
+            
+        } catch (SQLException ex) {
+            operacionExitosa = false;
+            System.out.println("Error al consultar los usuario por el nombre de usuario: " + ex.toString());
+            Logger.getLogger(VehiculoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            Conexion.close(conn);
+        }
+
+        return existeUsuarioEnDb;
+    }
+    
+    public UsuarioVO consultarUsuarioPorId(String idUsuario){
+        UsuarioVO usuarioVo = new UsuarioVO();
+        sql = "SELECT * FROM datospersonales as datos INNER JOIN usuario ON usuario.USUID = datos.USUID WHERE usuario.USUID = ?";
+        
+        try {
+            conn = Conexion.getConnection();
+            
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, idUsuario);
+            rs = stmt.executeQuery();
+            
+            if(rs.next()){
+                String id = rs.getString("USUID");
+                String nombre = rs.getString("DATNOMBRE");
+                String apellido = rs.getString("DATAPELLIDO");
+                String telefono = rs.getString("DATELEFONO");
+                String correo = rs.getString("DATCORREO");
+                
+                usuarioVo = new UsuarioVO(id, "", "", "", nombre, apellido, telefono, correo);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            close(rs);
+            close(stmt);
+            close(conn);
+        }
+        return usuarioVo;
+    }
 
     @Override
     public boolean insert(UsuarioVO usuarioVo){
@@ -124,17 +180,43 @@ public class UsuarioDAO extends Conexion implements IUsuarioDAO{
     }
 
     @Override
-    public boolean update(UsuarioVO usuarioVo) throws SQLException {
+    public boolean update(UsuarioVO usuarioVo) {
+        sql = "UPDATE datospersonales SET DATNOMBRE = ?, DATAPELLIDO = ?, DATELEFONO = ?, DATCORREO = ? WHERE USUID = ?";
+        
+        try {
+            // Conectarnos a la base de datos
+            conn = Conexion.getConnection();
+            // Actualizar usuario en la tabla usuario
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, usuarioVo.getDatNombre());
+            stmt.setString(2, usuarioVo.getDatApellido());
+            stmt.setString(3, usuarioVo.getDatTelefono());
+            stmt.setString(4, usuarioVo.getDatCorreo());
+            stmt.setString(5, usuarioVo.getIdUsuario());
+            stmt.executeUpdate();
+            
+            // Si logra actualizar el usuario retorna true
+            operacionExitosa = true;
+            
+        } catch (SQLException ex) {
+            operacionExitosa = false;
+            System.out.println("Error al actualizar el usuario: " + ex.toString());
+            Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexion.close(stmt);
+            Conexion.close(conn);
+        }
+        
+        return operacionExitosa;
+    }
+
+    @Override
+    public boolean delect(UsuarioVO usuarioVo) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean delect(UsuarioVO usuarioVo) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean select() throws SQLException {
+    public boolean select() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

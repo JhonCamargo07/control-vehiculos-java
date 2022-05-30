@@ -1,6 +1,5 @@
 package dao;
 
-import domain.UsuarioVO;
 import domain.VehiculoVO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -97,6 +96,33 @@ public class VehiculoDAO extends Conexion implements IVehiculoDAO {
         }
 
         return categorias;
+    }
+    public boolean existeVehiculoEnBD(String placa) {
+        boolean existeLaPlacaEnDb = false;
+        sql = "SELECT VEHPLACA FROM vehiculo WHERE VEHPLACA = ?";
+
+        try {
+            conn = Conexion.getConnection();
+
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, placa);
+            rs = stmt.executeQuery();
+
+            if (rs.next()){
+                existeLaPlacaEnDb = true;
+            }
+            
+        } catch (SQLException ex) {
+            operacionExitosa = false;
+            System.out.println("Error al consultar los vehiculos por la placa: " + ex.toString());
+            Logger.getLogger(VehiculoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Conexion.close(rs);
+            Conexion.close(stmt);
+            Conexion.close(conn);
+        }
+
+        return existeLaPlacaEnDb;
     }
 
     @Override

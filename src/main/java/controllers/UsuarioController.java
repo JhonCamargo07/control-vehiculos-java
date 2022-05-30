@@ -20,7 +20,11 @@ public class UsuarioController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        String idUsuario = request.getParameter("id");
+        UsuarioDAO usuarioDao = new UsuarioDAO();
+        UsuarioVO usuarioVo = usuarioDao.consultarUsuarioPorId(idUsuario);
+        request.setAttribute("usuario", usuarioVo);
+        request.getRequestDispatcher("WEB-INF/paginas/vendedor/datos-vendedor.jsp").forward(request, response);
     }
 
     /**
@@ -39,7 +43,7 @@ public class UsuarioController extends HttpServlet {
             request.setAttribute("mensajeOperacion", "Los datos no pueden ser nulos");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
-            UsuarioVO usuarioVo = null;
+            UsuarioVO usuarioVo = new UsuarioVO();
             // Recibir datos de la vista
             String idRol = request.getParameter("rol");
             String idUsuario = request.getParameter("idUsuario");
@@ -58,6 +62,9 @@ public class UsuarioController extends HttpServlet {
             // DAO
             UsuarioDAO usuarioDao = new UsuarioDAO();
 
+            // Obtener la sesion
+            HttpSession sesion = request.getSession();
+
             // Administrar operadores
             switch (accion) {
                 case 1: // Insert
@@ -69,8 +76,37 @@ public class UsuarioController extends HttpServlet {
                             request.setAttribute("mensajeOperacion", "La contraseña de administrador es incorrecta");
                             request.getRequestDispatcher("index.jsp").forward(request, response);
                         } else {
+                            if (usuarioDao.existeUsuarioEnBD(usuarioVo.getUsuLogin())) {
+                                request.setAttribute("insertUsuario", usuario);
+                                request.setAttribute("insertPassword", password);
+                                request.setAttribute("mensajeOperacion", "El nombre de usuario ya se encuentra registrado, pruebe con otro");
+                                request.getRequestDispatcher("index.jsp").forward(request, response);
+                            } else {
+                                if (usuarioDao.insert(usuarioVo)) {
+                                    request.setAttribute("loginUsuario", usuarioVo.getUsuLogin());
+                                    request.setAttribute("loginPassword", usuarioVo.getUsuPassword());
+                                    request.setAttribute("mensajeOperacion", "Usuario agregado exitosamente, puede iniciar sesion");
+                                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                                } else {
+                                    request.setAttribute("insertUsuario", usuario);
+                                    request.setAttribute("insertPassword", password);
+                                    request.setAttribute("mensajeOperacion", "Ocurrio un error al registrar el usuario");
+                                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                                }
+                            }
+                        }
+                    } else {
+                        if (usuarioDao.existeUsuarioEnBD(usuarioVo.getUsuLogin())) {
+                            request.setAttribute("insertUsuario", usuario);
+                            request.setAttribute("insertPassword", password);
+                            request.setAttribute("mensajeOperacion", "El nombre de usuario ya se encuentra registrado, pruebe con otro");
+                            request.getRequestDispatcher("index.jsp").forward(request, response);
+                        } else {
                             if (usuarioDao.insert(usuarioVo)) {
-                                response.sendRedirect("menu.jsp");
+                                request.setAttribute("loginUsuario", usuarioVo.getUsuLogin());
+                                request.setAttribute("loginPassword", usuarioVo.getUsuPassword());
+                                request.setAttribute("mensajeOperacion", "Usuario agregado exitosamente, puede iniciar sesion");
+                                request.getRequestDispatcher("index.jsp").forward(request, response);
                             } else {
                                 request.setAttribute("insertUsuario", usuario);
                                 request.setAttribute("insertPassword", password);
@@ -78,21 +114,12 @@ public class UsuarioController extends HttpServlet {
                                 request.getRequestDispatcher("index.jsp").forward(request, response);
                             }
                         }
-                    } else {
-                        if (usuarioDao.insert(usuarioVo)) {
-                            response.sendRedirect("menu.jsp");
-                        } else {
-                            request.setAttribute("insertUsuario", usuario);
-                            request.setAttribute("insertPassword", password);
-                            request.setAttribute("mensajeOperacion", "Ocurrio un error al registrar el usuario");
-                            request.getRequestDispatcher("index.jsp").forward(request, response);
-                        }
                     }
                     break;
                 case 2: // Login
                     UsuarioVO usuVo = usuarioDao.login(usuario, password);
                     if (usuVo != null) {
-                        HttpSession sesion = request.getSession();
+                        sesion = request.getSession();
                         sesion.setAttribute("idUsuario", usuVo.getIdUsuario());
                         sesion.setAttribute("idRol", usuVo.getIdRol());
                         sesion.setAttribute("usuLogin", usuVo.getUsuLogin());
@@ -101,12 +128,12 @@ public class UsuarioController extends HttpServlet {
                         sesion.setAttribute("datApellido", usuVo.getDatApellido());
                         sesion.setAttribute("datTelefono", usuVo.getDatTelefono());
                         sesion.setAttribute("datCorreo", usuVo.getDatCorreo());
-                        
+
                         VehiculoDAO vehDao = new VehiculoDAO();
                         List<VehiculoVO> categorias = vehDao.listarCategorias();
                         sesion.setAttribute("categorias", categorias);
                         sesion.setAttribute("totalCategorias", categorias.size());
-                        
+
                         response.sendRedirect("menu.jsp");
                     } else {
                         request.setAttribute("loginUsuario", usuario);
@@ -116,14 +143,35 @@ public class UsuarioController extends HttpServlet {
                     }
                     break;
                 case 3: // Logout
-                    HttpSession sesion = request.getSession();
                     // Cerrar sesion
                     sesion.invalidate();
 
                     request.setAttribute("mensajeOperacion", "Sesion cerrada exitosamente!");
                     request.getRequestDispatcher("index.jsp").forward(request, response);
+                    break;
+                case 4: // Update
+                    sesion = request.getSession();
+                    String idUsu = (String) sesion.getAttribute("idUsuario");
+                    String nombre = request.getParameter("inputNombre");
+                    String apellido = request.getParameter("inputApellido");
+                    String email = request.getParameter("inputEmail");
+                    String telefono = request.getParameter("inputTelefono");
+
+                    usuarioVo = new UsuarioVO(idUsu, "", usuario, password, nombre, apellido, telefono, email);
+
+                    boolean usuarioActualizadoExitosamente = usuarioDao.update(usuarioVo);
+                    if (usuarioActualizadoExitosamente) {
+                        request.setAttribute("mensajeOperacion", "Usuario actualizado exitosamente");
+                        request.getRequestDispatcher("vendedor/").forward(request, response);
+                    } else {
+                        request.setAttribute("mensajeOperacion", "Ocurrió un error al actualizar el usuario");
+                        request.getRequestDispatcher("vendedor/").forward(request, response);
+                    }
+
+                    break;
                 default:
-                    response.sendRedirect("vendedor/");
+                    request.getRequestDispatcher("vendedor/").forward(request, response);
+                    break;
             }
         }
     }

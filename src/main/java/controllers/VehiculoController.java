@@ -1,6 +1,8 @@
 package controllers;
 
+import dao.UsuarioDAO;
 import dao.VehiculoDAO;
+import domain.UsuarioVO;
 import domain.VehiculoVO;
 import java.io.IOException;
 import java.util.List;
@@ -29,6 +31,7 @@ public class VehiculoController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.getRequestDispatcher("vendedor/").forward(request, response);
     }
 
     /**
@@ -70,13 +73,22 @@ public class VehiculoController extends HttpServlet {
                         request.setAttribute("mensajeOperacion", "Ningun campo puede ser nulo");
                         request.getRequestDispatcher("vendedor/index.jsp").forward(request, response);
                     }else{
-                        boolean insertExitoso = vehiculoDao.insert(vehiculoVo, idUsuario);
-                        if (insertExitoso) {
-                            request.setAttribute("mensajeOperacion", "Vehiculo agregado exitosamente");
+                        // Comprobar si la placa ya se encuentra registrada
+                        boolean existePlacaEnBD = vehiculoDao.existeVehiculoEnBD(vehiculoVo.getVehPlaca());
+                        if(existePlacaEnBD){
+                            request.setAttribute("datosEnviados", vehiculoVo);
+                            request.setAttribute("mensajeOperacion", "El vehiculo con placas " + vehiculoVo.getVehPlaca() + " ya se encuentra registrado, pruebe con otra placa.");
                             request.getRequestDispatcher("vendedor/").forward(request, response);
-                        } else {
-                            request.setAttribute("mensajeOperacion", "Ocurrió un error al registrar el vehiculo");
-                            request.getRequestDispatcher("vendedor/").forward(request, response);
+                        }else{
+                            // Si no se encuentra registrada, se inserta el vehiculo
+                            boolean insertExitoso = vehiculoDao.insert(vehiculoVo, idUsuario);
+                            if (insertExitoso) {
+                                request.setAttribute("mensajeOperacion", "Vehiculo agregado exitosamente");
+                                request.getRequestDispatcher("vendedor/").forward(request, response);
+                            } else {
+                                request.setAttribute("mensajeOperacion", "Ocurrió un error al registrar el vehiculo");
+                                request.getRequestDispatcher("vendedor/").forward(request, response);
+                            }
                         }
                     }
                     break;
@@ -95,7 +107,7 @@ public class VehiculoController extends HttpServlet {
                     
 //                    <% if (request.getAttribute("idCategoria") == request.getAttribute("categoId")) {out.print("selected");} %>
                 default:
-                    response.sendRedirect("vendedor/");
+//                    response.sendRedirect("vendedor/");
                     break;
             }
         }
