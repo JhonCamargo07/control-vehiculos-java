@@ -10,6 +10,7 @@
                         <form action="${pageContext.request.contextPath}/Vehiculo" method="POST" class="was-validated">
 
                             <div class="form-outline mb-2">
+                                <label class="form-label" for="form6Example5">Tipo de vehiculo <span class="text-danger">*</span></label>
                                 <select class="form-select" name="inputCategoria" aria-label="Default select example" required>
                                     <c:forEach var="categoria" items="${categorias}" varStatus="status">
                                         <option value="${categoria.categoId}">${categoria.nombreCategoria}</option> 
@@ -17,10 +18,9 @@
                                 </select>
                                 <input type="hidden" value="${totalCategorias}" name="totalCategorias">
                                 <input type="hidden" value="2" name="accion">
-                                <label class="form-label" for="form6Example5">Tipo de vehiculo <span class="text-danger">*</span></label>
                             </div>
 
-                            <div class="text-center mb-5">
+                            <div class="text-center my-3">
                                 <button type="submit" name="buscarVehiculo" class="btn btn-primary btn-block">Buscar vehiculo</button>
                             </div>
                         </form>

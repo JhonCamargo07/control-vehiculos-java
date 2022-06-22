@@ -1,3 +1,4 @@
+<%@page import="domain.UsuarioVO"%>
 <nav class="navbar navbar-expand-lg navbar-dark bg-info">
     <div class="container">
         <a class="navbar-brand fw-bold" href="#"><i class="fas fa-car me-2"></i>Control vehiculos</a>
@@ -11,7 +12,9 @@
                 </li>
                 <%
                     HttpSession sesion = request.getSession();
-                    String idRol = (String) sesion.getAttribute("idRol");
+
+                    UsuarioVO userVo = (UsuarioVO) sesion.getAttribute("usuario");
+                    String idRol = userVo.getIdRol();
                     if (idRol.equals("3")) {
                 %>
                 <li class="nav-item dropdown m-1">
@@ -38,8 +41,8 @@
 
                 <li class="nav-item">
                     <form action="${pageContext.request.contextPath}/Usuario" method="POST">
-                        <input type="hidden" name="inputUsuario" value="${usuLogin}">
-                        <input type="hidden" name="inputPassword" value="${usuPassword}">
+                        <input type="hidden" name="inputUsuario" value="<%= userVo.getUsuLogin() %>">
+                        <input type="hidden" name="inputPassword" value="<%= userVo.getUsuLogin() %>">
                         <input type="hidden" name="accion" value="3">
                         <button type="submit" class="btn btn-primary text-white m-1 fw-bolder">Cerrar sesión</button>
                     </form>

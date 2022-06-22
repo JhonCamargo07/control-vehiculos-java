@@ -1,6 +1,5 @@
 package dao;
 
-import domain.UsuarioVO;
 import domain.VehiculoVO;
 import java.sql.SQLException;
 

@@ -63,7 +63,7 @@ public class VehiculoDAO extends Conexion implements IVehiculoDAO {
     public List<VehiculoVO> listarVehiculos(int idCatalogo) {
         List<VehiculoVO> categorias = new ArrayList();
 
-        sql = "SELECT * FROM vehiculo as veh INNER JOIN categoria AS cat ON veh.CATID = cat.CATID INNER JOIN datosPersonales AS datos ON datos.DATID = veh.DATID INNER JOIN usuario as usu ON usu.USUID = datos.USUID WHERE cat.CATID = ?";
+        sql = "SELECT * FROM vehiculo as veh INNER JOIN categoria AS cat ON veh.CATID = cat.CATID INNER JOIN datosPersonales AS datos ON datos.DATID = veh.DATID INNER JOIN usuario as usu ON usu.USUID = datos.USUID WHERE cat.CATID = ? ORDER BY vehmodelo";
 
         try {
             conn = Conexion.getConnection();
