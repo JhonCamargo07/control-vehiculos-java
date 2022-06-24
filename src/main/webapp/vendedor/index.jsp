@@ -1,3 +1,4 @@
+<%@include file="../cache.jsp" %>
 <jsp:include page="../validarSesion.jsp" />
 <jsp:include page="../validarRolVendedor.jsp" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -20,6 +21,10 @@
         <!-- Editar vendedor -->
         <jsp:include page="/WEB-INF/paginas/vendedor/editar-perfil.jsp" />        
         <!-- /Editar vendedor -->
+        
+        <!--  Agregar usuario -->
+        <jsp:include page="/WEB-INF/paginas/comunes/singup.jsp" />        
+        <!-- / Agregar usuario -->
 
         <!-- scripts -->
         <jsp:include page="/WEB-INF/paginas/comunes/link-js.jsp" />        

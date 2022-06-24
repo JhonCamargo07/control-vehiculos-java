@@ -41,7 +41,7 @@ create table DATOSPERSONALES
    DATIPOID             varchar(20) not null default 'C.C',
    DATNUMEROID          varchar(20) not null default '1000000000',
    DATELEFONO           varchar(20) not null default '3100000000',
-   DATCORREO            varchar(50) not null default 'desconocido@gmail.com',
+   DATCORREO            varchar(100) unique not null,
    primary key (DATID)
 );
 
@@ -61,7 +61,7 @@ create table ROL
 create table USUARIO
 (
    USUID                int not null auto_increment primary key,
-   USULOGIN             varchar(20) unique not null,
+   USULOGIN             varchar(100) unique not null,
    USUPASSWORD          varchar(20) not null
 );
 
@@ -124,7 +124,7 @@ DELIMITER ;
 
 INSERT INTO categoria (CATIPO) VALUES ('Campero'), ('Automóvil'), ('Camioneta'), ('Tractor');
 
-INSERT INTO  rol (ROLTIPO) VALUES ('comprador'), ('vendedor'), ('camprador y vendedor');
+INSERT INTO  rol (ROLTIPO) VALUES ('comprador'), ('vendedor'), ('camprador y vendedor'), ('administrador');
 
 -- INSERT INTO datospersonales VALUES(null, 1, 'Jhon', 'Camargo', 'C.C', '1014737507', '3144781527', 'jhonalexcamargo07@gmail.com'),
 -- (null, 2, 'Alexander', 'Cadena', 'C.C', '1014737508', '3142577567', 'jhoncamargo07a@gmail.com'),

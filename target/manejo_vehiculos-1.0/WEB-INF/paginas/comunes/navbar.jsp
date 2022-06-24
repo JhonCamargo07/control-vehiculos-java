@@ -15,7 +15,7 @@
 
                     UsuarioVO userVo = (UsuarioVO) sesion.getAttribute("usuario");
                     String idRol = userVo.getIdRol();
-                    if (idRol.equals("3")) {
+                    if (idRol.equals("3") || idRol.equals("4")) {
                 %>
                 <li class="nav-item dropdown m-1">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Rol</a>
@@ -34,6 +34,16 @@
                 %>
                 <li class="nav-item">
                     <a class="nav-link m-1" aria-current="page" href="" data-toggle="modal" data-target="#editarPerfilModal">Editar perfil</a>
+                </li>
+                <%
+                    }
+                %>
+                <%
+                    if (idRol.equals("4")) {
+                %>
+                
+                <li class="nav-item">
+                    <a class="nav-link m-1" aria-current="page" href="" data-toggle="modal" data-target="#singup">Crear usuario</a>
                 </li>
                 <%
                     }

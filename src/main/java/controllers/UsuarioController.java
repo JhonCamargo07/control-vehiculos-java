@@ -4,7 +4,10 @@ import dao.*;
 import domain.*;
 import java.io.IOException;
 import java.util.List;
-import javax.servlet.ServletException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
+import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
@@ -15,7 +18,16 @@ import javax.servlet.http.*;
 @WebServlet(name = "UsuarioController", urlPatterns = {"/Usuario"})
 public class UsuarioController extends HttpServlet {
 
-    private static String PASSWORD_ADMIN_ORIGINAL = "JC*bN1mP6wE%jM-oO507";
+    private String server, port, mail, pass;
+    private String asunto = "", mensaje = "";
+
+    public void init() {
+        ServletContext context = getServletContext();
+        server = context.getInitParameter("server");
+        port = context.getInitParameter("port");
+        mail = context.getInitParameter("mail");
+        pass = context.getInitParameter("password");
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -30,14 +42,15 @@ public class UsuarioController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        response.setContentType("text/html;charset=UTF-8");
         if (request.getParameter("inputUsuario").equals("") || request.getParameter("inputPassword").equals("")) {
+            request.setAttribute("loginUsuario", request.getParameter("inputUsuario"));
+            request.setAttribute("loginPassword", request.getParameter("inputPassword"));
             request.setAttribute("mensajeOperacion", "Los datos no pueden ser nulos");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         } else {
             UsuarioVO usuarioVo = new UsuarioVO();
             // Recibir datos de la vista
-            String idRol = request.getParameter("rol");
+            String idRol = "1";
             String idUsuario = request.getParameter("idUsuario");
             String usuario = request.getParameter("inputUsuario");
             String password = request.getParameter("inputPassword");
@@ -53,7 +66,7 @@ public class UsuarioController extends HttpServlet {
 
             switch (accion) {
                 case 1: // Insert
-                    this.insert(request, response, usuarioVo, usuario, password, idRol);
+                    this.insert(request, response, usuarioVo, idRol);
                     break;
                 case 2: // Login
                     this.login(request, response, usuario, password);
@@ -102,7 +115,7 @@ public class UsuarioController extends HttpServlet {
 
     private void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Pragma", "No-cache");
         response.setDateHeader("Expires", 0);
 
         HttpSession sesion = request.getSession();
@@ -120,36 +133,61 @@ public class UsuarioController extends HttpServlet {
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
-    private void insert(HttpServletRequest request, HttpServletResponse response, UsuarioVO usuarioVo, String usuario, String password, String idRol) throws ServletException, IOException {
+    private void insert(HttpServletRequest request, HttpServletResponse response, UsuarioVO usuarioVo, String idRol) throws ServletException, IOException {
         UsuarioDAO usuarioDao = new UsuarioDAO();
-        // UsuarioVO usuarioVo = new UsuarioVO();
+        String emailUser = usuarioVo.getUsuLogin();
+        String password = usuarioVo.getUsuPassword();
 
-        if (!idRol.equals("1")) {
-            String passwordAdmin = request.getParameter("passAdmin");
-            if (!PASSWORD_ADMIN_ORIGINAL.equals(passwordAdmin)) {
-                this.redirigir(request, response, usuario, password, "La contraseña de administrador es incorrecta");
-            } else {
-                if (usuarioDao.existeUsuarioEnBD(usuarioVo.getUsuLogin())) {
-                    this.redirigir(request, response, usuario, password, "El nombre de usuario ya se encuentra registrado, pruebe con otro");
-                } else {
-                    if (usuarioDao.insert(usuarioVo)) {
-                        this.login(request, response, usuario, password);
-                    } else {
-                        this.redirigir(request, response, usuario, password, "Ocurrio un error al registrar el usuario");
-                    }
+        if (request.getParameter("input-nombre").equals("") || request.getParameter("input-apellido").equals("") || request.getParameter("input-tipo-doc").equals("") || request.getParameter("input-documento").equals("") || request.getParameter("inputPhone").equals("")) {
+            request.setAttribute("mensajeOperacion", "Los datos no pueden ser nulos");
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        } else {
+
+            HttpSession sesion = null;
+
+            sesion = request.getSession();
+            UsuarioVO usuaVo = null;
+            if (sesion.getAttribute("usuario") != null) {
+                usuaVo = (UsuarioVO) sesion.getAttribute("usuario");
+                String idRolUsuario = usuaVo.getIdRol();
+                if (idRolUsuario.equals("4")) {
+                    idRol = request.getParameter("rol");
                 }
             }
-        } else {
-            if (usuarioDao.existeUsuarioEnBD(usuarioVo.getUsuLogin())) {
-                this.redirigir(request, response, usuario, password, "El nombre de usuario ya se encuentra registrado, pruebe con otro");
+
+            UsuarioVO userVo = new UsuarioVO(idRol, emailUser, password, request.getParameter("input-nombre"), request.getParameter("input-apellido"), request.getParameter("inputPhone"), emailUser);
+            userVo.setIdRol(idRol);
+            userVo.setDatNombre(request.getParameter("input-nombre"));
+            userVo.setDatApellido(request.getParameter("input-apellido"));
+            userVo.setDatTelefono(request.getParameter("inputPhone"));
+            userVo.setDatCorreo(emailUser);
+
+            asunto = "Bienvenido a la familia Control Vehiculos JAC";
+            System.out.println("userVo = " + userVo);
+            mensaje = "Es un placer que pertenezcas a esta gran familia. Bienvenido!!😀";
+
+            if (usuarioDao.existeEmailEnBD(usuarioVo.getUsuLogin())) {
+                this.redirigir(request, response, emailUser, password, "El nombre de usuario ya se encuentra registrado, pruebe con otro");
             } else {
-                if (usuarioDao.insert(usuarioVo)) {
-                    this.login(request, response, usuario, password);
+                if (usuarioDao.insert(userVo)) {
+//                    try {
+//                        SendMail.sendMail(server, port, mail, pass, emailUser, asunto, mensaje);
+                    if (sesion.getAttribute("usuario") != null) {
+                        request.setAttribute("mensajeOperacion", "Usuario agregado exitosamente");
+                        request.getRequestDispatcher("vendedor/index.jsp").forward(request, response);
+                    } else {
+                        this.login(request, response, emailUser, password);
+                    }
+//                    } catch (MessagingException ex) {
+//                        System.out.println("Error al enviar el correo e iniciar sesión");
+//                        Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
                 } else {
-                    this.redirigir(request, response, usuario, password, "Ocurrio un error al registrar el usuario");
+                    this.redirigir(request, response, emailUser, password, "Ocurrio un error al registrar el usuario");
                 }
             }
         }
+
     }
 
     private void redirigir(HttpServletRequest request, HttpServletResponse response, String usuario, String password, String mensaje) throws ServletException, IOException {

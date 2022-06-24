@@ -75,12 +75,12 @@ public class VehiculoDAO extends Conexion implements IVehiculoDAO {
             while (rs.next()) {
                 String modelo = rs.getString("VEHMODELO");
                 String idVendedor = rs.getString("USUID");
-//                String color = rs.getString("VEHCOLOR");
+                String placa = rs.getString("VEHPLACA");
                 String precio = rs.getString("VEHPRECIO");
                 String idCategoria = rs.getString("CATID");
                 String nombreCategoria = rs.getString("CATIPO");
 
-                VehiculoVO vehiculoVo = new VehiculoVO("", idVendedor, idCategoria, modelo, "", "", precio);
+                VehiculoVO vehiculoVo = new VehiculoVO(placa, idVendedor, idCategoria, modelo, "", "", precio);
 
                 categorias.add(vehiculoVo);
                 System.out.println(categorias);

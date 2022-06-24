@@ -46,6 +46,16 @@ public class UsuarioVO {
         this.datCorreo = datCorreo;
     }
 
+    public UsuarioVO(String idRol, String usuLogin, String usuPassword, String datNombre, String datApellido, String datTelefono, String datCorreo) {
+        this.idRol = idRol;
+        this.usuLogin = usuLogin;
+        this.usuPassword = usuPassword;
+        this.datNombre = datNombre;
+        this.datApellido = datApellido;
+        this.datTelefono = datTelefono;
+        this.datCorreo = datCorreo;
+    }
+
     public String getIdUsuario() {
         return this.idUsuario;
     }
@@ -109,9 +119,10 @@ public class UsuarioVO {
     public void setDatCorreo(String datCorreo) {
         this.datCorreo = datCorreo;
     }
-    
+
     @Override
     public String toString() {
-        return "UsuarioVO{" + "usuId=" + idUsuario + ", idRol=" + idRol + ", usuLogin=" + usuLogin + ", usuPassword=" + usuPassword + '}';
+        return "UsuarioVO{" + "idUsuario=" + idUsuario + ", idRol=" + idRol + ", usuLogin=" + usuLogin + ", usuPassword=" + usuPassword + ", datNombre=" + datNombre + ", datApellido=" + datApellido + ", datTelefono=" + datTelefono + ", datCorreo=" + datCorreo + '}';
     }
+    
 }

@@ -4,6 +4,8 @@ domain\UsuarioVO.class
 controllers\VehiculoController.class
 controllers\UsuarioController.class
 dao\UsuarioDAO.class
+domain\SendMail$1.class
 domain\VehiculoVO.class
 dao\IVehiculoDAO.class
+domain\SendMail.class
 dao\VehiculoDAO.class
