@@ -105,43 +105,15 @@ alter table VEHICULO add constraint FK_REFERENCE_5 foreign key (CATID)
 alter table VEHICULO add constraint FK_REFERENCE_6 foreign key (DATID)
       references DATOSPERSONALES (DATID) on delete restrict on update restrict;
 
--- triggers
-
-DELIMITER $$
-CREATE TRIGGER insertarDatosDeUsuario
-AFTER INSERT on usuario
-FOR EACH ROW
-BEGIN
-	INSERT INTO datospersonales VALUES (null, NEW.USUID, 'Desconocido', 'Desconocido', 'C.C', '1000000000', '3100000000', 'desconocido@gmail.com');
-END $$
-DELIMITER ;
-
-
 -- Inserciones
-
--- INSERT INTO usuario VALUES (null, 'JhonCamargo21', '1234567890');
--- INSERT INTO usuario VALUES (null,'JhonCamargo21', '1234567890');
-
-INSERT INTO categoria (CATIPO) VALUES ('Campero'), ('Automóvil'), ('Camioneta'), ('Tractor');
 
 INSERT INTO  rol (ROLTIPO) VALUES ('comprador'), ('vendedor'), ('camprador y vendedor'), ('administrador');
 
--- INSERT INTO datospersonales VALUES(null, 1, 'Jhon', 'Camargo', 'C.C', '1014737507', '3144781527', 'jhonalexcamargo07@gmail.com'),
--- (null, 2, 'Alexander', 'Cadena', 'C.C', '1014737508', '3142577567', 'jhoncamargo07a@gmail.com'),
--- (null, 3, 'Jacc', 'Hernandez', 'C.C', '1014737509', '3143329921', 'jacchernandez@gmail.com');
+INSERT INTO categoria (CATIPO) VALUES ('Campero'), ('Automóvil'), ('Camioneta'), ('Tractor');
 
-SELECT * FROM usuario ORDER BY USUID DESC LIMIT 1;
+INSERT INTO usuario VALUES (null, 'jhoncamargo07a@gmail.com', '1234567890');
 
-select * from usuario;
-select * from usuario_rol;
-select * from rol;
-select * from datospersonales;
+INSERT INTO datospersonales VALUES(null, 1, 'Jhon Alexander', 'Camargo Cadena', 'C.C', '1010101010', '3141011010', 'jhoncamargo07a@gmail.com');
 
--- SELECT * FROM usuario WHERE BINARY USULOGIN = 'Canserbero' AND BINARY USUPASSWORD = '1234567890';
+INSERT INTO usuario_rol VALUES(4,1);
 
-
-SELECT * FROM USUARIO INNER JOIN datospersonales ON datospersonales.USUID = usuario.USUID INNER JOIN USUARIO_ROL ON USUARIO_ROL.USUID = USUARIO.USUID INNER JOIN ROL ON ROL.ROLID = USUARIO_ROL.ROLID  WHERE BINARY USULOGIN = 'JhonCamargo21' AND BINARY USUPASSWORD = '1234567890';
-
-SELECT USUARIO.USUID, ROL.ROLID, USULOGIN, USUPASSWORD, DATNOMBRE, DATAPELLIDO, DATELEFONO, DATCORREO FROM USUARIO INNER JOIN datospersonales as datos ON datos.USUID = usuario.USUID INNER JOIN USUARIO_ROL as usuRol ON usuRol.USUID = usuario.USUID INNER JOIN ROL ON ROL.ROLID = usuRol.ROLID  WHERE BINARY USULOGIN = ? AND BINARY USUPASSWORD = ?;
-
-SELECT datos.DATID FROM USUARIO INNER JOIN datospersonales as datos on usuario.USUID = datos.USUID WHERE usuario.USUID = 5;

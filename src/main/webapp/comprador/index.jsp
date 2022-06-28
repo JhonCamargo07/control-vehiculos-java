@@ -10,7 +10,6 @@
         <jsp:include page="/WEB-INF/paginas/comunes/navbar.jsp" />        
         <!-- /navbar -->
 
-
         <!-- consultar vehiculos -->
         <jsp:include page="/WEB-INF/paginas/comprador/consultar-vehiculos.jsp" />        
         <!-- /consultar vehiculos -->

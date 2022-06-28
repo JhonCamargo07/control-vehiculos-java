@@ -45,7 +45,6 @@ public class VehiculoDAO extends Conexion implements IVehiculoDAO {
                 VehiculoVO vehiculoVo = new VehiculoVO("", "", idCategoria, nombreCategoria);
 
                 categorias.add(vehiculoVo);
-                System.out.println(categorias);
             }
         } catch (SQLException ex) {
             operacionExitosa = false;
@@ -79,11 +78,12 @@ public class VehiculoDAO extends Conexion implements IVehiculoDAO {
                 String precio = rs.getString("VEHPRECIO");
                 String idCategoria = rs.getString("CATID");
                 String nombreCategoria = rs.getString("CATIPO");
+                String marca = rs.getString("VEHMARCA");
+                String estado = rs.getString("VEHESTADO");
 
-                VehiculoVO vehiculoVo = new VehiculoVO(placa, idVendedor, idCategoria, modelo, "", "", precio);
+                VehiculoVO vehiculoVo = new VehiculoVO(placa, idVendedor, idCategoria, modelo, marca, estado, precio);
 
                 categorias.add(vehiculoVo);
-                System.out.println(categorias);
             }
         } catch (SQLException ex) {
             operacionExitosa = false;
@@ -97,6 +97,7 @@ public class VehiculoDAO extends Conexion implements IVehiculoDAO {
 
         return categorias;
     }
+
     public boolean existeVehiculoEnBD(String placa) {
         boolean existeLaPlacaEnDb = false;
         sql = "SELECT VEHPLACA FROM vehiculo WHERE VEHPLACA = ?";
@@ -108,10 +109,10 @@ public class VehiculoDAO extends Conexion implements IVehiculoDAO {
             stmt.setString(1, placa);
             rs = stmt.executeQuery();
 
-            if (rs.next()){
+            if (rs.next()) {
                 existeLaPlacaEnDb = true;
             }
-            
+
         } catch (SQLException ex) {
             operacionExitosa = false;
             System.out.println("Error al consultar los vehiculos por la placa: " + ex.toString());

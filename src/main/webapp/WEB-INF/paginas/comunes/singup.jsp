@@ -1,6 +1,6 @@
 <%@page import="domain.UsuarioVO"%>
 <!-- Modal -->
-<div class="modal fade" id="singup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="singup">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-info text-white">
@@ -8,7 +8,9 @@
                     <h5 class="modal-title" id="exampleModalLabel">Crear una cuenta</h5>
                     <span>Es facil y rapido</span>
                 </div>
-                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close bg-transparent border-0 text-white" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times text-white"></i>
+                </button>
             </div>
             <div class="modal-body">
                 <!-- Form singup -->
@@ -61,14 +63,14 @@
                                 }
                         %>
                         <div class="mb-3">
-                            <label for="" class="form-label">Tipo de documento <span class="text-danger">*</span></label>
+                            <label for="" class="form-label">Rol <span class="text-danger">*</span></label>
                             <select class="form-select form-control" name="rol" style="height: 58px">
                                 <option value="2">Vendedor</option>
                                 <option value="3">Comprador y vendedor</option>
                                 <option value="4">Administrador</option>
                             </select>
                         </div>
-                        <%   
+                        <%
                             }
                         %>
 

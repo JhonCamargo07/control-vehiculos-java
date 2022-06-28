@@ -5,6 +5,7 @@ package domain;
  * @author Camargo
  */
 public class VehiculoVO {
+
     private String vehPlaca;
     private String datosId;
     private String categoId;
@@ -31,14 +32,14 @@ public class VehiculoVO {
         this.datosId = datosId;
         this.categoId = categoId;
     }
-    
+
     public VehiculoVO(String vehPlaca, String datosId, String categoId, String nombreCategoria) {
         this.vehPlaca = vehPlaca;
         this.datosId = datosId;
         this.categoId = categoId;
         this.nombreCategoria = nombreCategoria;
     }
-    
+
     public VehiculoVO(String vehPlaca, String datosId, String categoId, String vehModelo, String vehMarca, String vehEstado, String vehPrecio) {
         this.vehPlaca = vehPlaca;
         this.datosId = datosId;
@@ -117,5 +118,5 @@ public class VehiculoVO {
     public String toString() {
         return "VehiculoVO{" + "vehPlaca=" + vehPlaca + ", datosId=" + datosId + ", categoId=" + categoId + ", nombreCategoria=" + nombreCategoria + ", vehModelo=" + vehModelo + ", vehMarca=" + vehMarca + ", vehEstado=" + vehEstado + ", vehPrecio=" + vehPrecio + '}';
     }
-    
+
 }

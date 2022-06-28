@@ -1,7 +1,7 @@
 <%@page import="domain.UsuarioVO"%>
 <%
     HttpSession sesion = request.getSession();
-    
+
     UsuarioVO userVo = (UsuarioVO) sesion.getAttribute("usuario");
     String idRol = userVo.getIdRol();%>
 <div class="modal fade" id="editarPerfilModal">
@@ -17,14 +17,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nombre">Nombre <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control mt-1" name="inputNombre" value="<%= userVo.getDatNombre() %>" required>
+                        <input type="text" class="form-control mt-1" name="inputNombre" value="<%= userVo.getDatNombre()%>" required>
                         <input type="hidden" value="<%= userVo.getUsuLogin()%>" name="inputUsuario">
-                        <input type="hidden" value="<%= userVo.getUsuLogin() %>" name="inputPassword">
+                        <input type="hidden" value="<%= userVo.getUsuLogin()%>" name="inputPassword">
                         <input type="hidden" value="4" name="accion">
                     </div>
                     <div class="form-group my-2">
                         <label for="apellido">Apellido <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control mt-1" name="inputApellido" value="<%= userVo.getDatApellido() %>" required>
+                        <input type="text" class="form-control mt-1" name="inputApellido" value="<%= userVo.getDatApellido()%>" required>
                     </div>
                     <div class="form-group my-2">
                         <label for="email">Correo <span class="text-danger">*</span></label>

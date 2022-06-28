@@ -68,7 +68,6 @@ public class UsuarioDAO extends Conexion implements IUsuarioDAO {
             Conexion.close(stmt);
             Conexion.close(conn);
         }
-
         return usuarioLoginVo;
     }
 

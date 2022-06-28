@@ -28,7 +28,7 @@
                 <%
                     if (request.getAttribute("vehiculos") != null) {
                 %>
-                <p class="fw-bold">Vehiculos tipo <?php echo $nombreCategoria; ?></p>
+                <!--<p class="fw-bold">Vehiculos tipo </p>-->
                 <table class="table table-striped mb-5 text-center mx-0">
                     <tr class="table-dark">
                         <th scope="col">#</th>
@@ -37,6 +37,7 @@
                         <th scope="col">Precio</th>
                         <th scope="col">Vendedor</th>
                     </tr>
+
                     <c:forEach var="vehiculo" items="${vehiculos}" varStatus="status">
                         <tr>
                             <td scope="row" class="align-items-center">${status.count}</td>
@@ -52,18 +53,7 @@
                     }
                 %>
 
-
-                <%
-                    if (request.getAttribute("mensajeOperacion") != null) {
-                %>
-                <div class="alert alert-dark alert-dismissible fade show" role="alert">
-                    <h3 class="load fw-bold">${mensajeOperacion}</h3>
-                    ${DescripcionMensaje}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <%
-                    }
-                %>
+                <jsp:include page="/WEB-INF/paginas/comunes/mensajeOperacion.jsp" />
             </div>
             <div class="col-md-2"></div>
         </div>

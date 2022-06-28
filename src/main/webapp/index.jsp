@@ -33,21 +33,9 @@
                     </form>
                 </div>
                 <div class="col-md-3"></div>
-
-                <%
-                    if (request.getAttribute("mensajeOperacion") != null) {
-                %>
-                <div class="alert alert-dark alert-dismissible fade show" role="alert">
-                    <h3 class="load fw-bold">${mensajeOperacion}</h3>
-                    ${DescripcionMensaje}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <%
-                    }
-                %>
+                <jsp:include page="/WEB-INF/paginas/comunes/mensajeOperacion.jsp" />
             </div>
         </div>
-
 
         <!-- SingUp -->
         <jsp:include page="/WEB-INF/paginas/comunes/singup.jsp" />        
@@ -57,7 +45,6 @@
         <jsp:include page="/WEB-INF/paginas/comunes/footer.jsp" />        
         <!-- /Footer -->
 
-        <script src="utilidades/js/validacion.js"></script>
         <!-- scripts -->
         <jsp:include page="/WEB-INF/paginas/comunes/link-js.jsp" />        
         <!-- /scripts -->

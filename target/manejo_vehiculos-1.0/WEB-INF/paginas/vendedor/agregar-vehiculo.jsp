@@ -65,17 +65,7 @@
                         <button type="submit" name="btnVehiculo" class="btn btn-primary btn-block">Registrar vehiculo</button>
                     </div>
                 </form>
-                <%
-                    if (request.getAttribute("mensajeOperacion") != null) {
-                %>
-                <div class="alert alert-dark alert-dismissible fade show" role="alert">
-                    <h3 class="load fw-bold">${mensajeOperacion}</h3>
-                    ${DescripcionMensaje}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <%
-                    }
-                %>
+                <jsp:include page="/WEB-INF/paginas/comunes/mensajeOperacion.jsp" />
             </div>
             <div class="col-md-3"></div>
         </div>

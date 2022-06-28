@@ -124,5 +124,5 @@ public class UsuarioVO {
     public String toString() {
         return "UsuarioVO{" + "idUsuario=" + idUsuario + ", idRol=" + idRol + ", usuLogin=" + usuLogin + ", usuPassword=" + usuPassword + ", datNombre=" + datNombre + ", datApellido=" + datApellido + ", datTelefono=" + datTelefono + ", datCorreo=" + datCorreo + '}';
     }
-    
+
 }

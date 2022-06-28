@@ -41,7 +41,7 @@
                 <%
                     if (idRol.equals("4")) {
                 %>
-                
+
                 <li class="nav-item">
                     <a class="nav-link m-1" aria-current="page" href="" data-toggle="modal" data-target="#singup">Crear usuario</a>
                 </li>
@@ -51,8 +51,8 @@
 
                 <li class="nav-item">
                     <form action="${pageContext.request.contextPath}/Usuario" method="POST">
-                        <input type="hidden" name="inputUsuario" value="<%= userVo.getUsuLogin() %>">
-                        <input type="hidden" name="inputPassword" value="<%= userVo.getUsuLogin() %>">
+                        <input type="hidden" name="inputUsuario" value="<%= userVo.getUsuLogin()%>">
+                        <input type="hidden" name="inputPassword" value="<%= userVo.getUsuLogin()%>">
                         <input type="hidden" name="accion" value="3">
                         <button type="submit" class="btn btn-primary text-white m-1 fw-bolder">Cerrar sesión</button>
                     </form>

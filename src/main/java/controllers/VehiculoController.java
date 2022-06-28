@@ -61,18 +61,18 @@ public class VehiculoController extends HttpServlet {
     }
 
     private void insertVehiculo(HttpServletRequest request, HttpServletResponse response, int categoria, String idUsuario) throws ServletException, IOException {
-        
+
         VehiculoDAO vehiculoDao = new VehiculoDAO();
-        
+
         String placa = request.getParameter("inputPlaca");
         String marca = request.getParameter("inputMarca");
         String modelo = request.getParameter("inputModelo");
         String precio = request.getParameter("inputPrecio");
         String color = request.getParameter("inputColor");
         String estado = request.getParameter("inputEstado");
-        
+
         VehiculoVO vehiculoVo = new VehiculoVO(placa, idUsuario, String.valueOf(categoria), modelo, marca, String.valueOf(estado), precio);
-        
+
         if (Integer.parseInt(estado) > 2 || Integer.parseInt(estado) < 1 || placa.equals("") || marca.equals("") || modelo.equals("") || Double.parseDouble(precio) == 0 || color.equals("") || estado.equals("") || categoria == 0 || idUsuario.equals("")) {
             request.setAttribute("mensajeOperacion", "Ningun campo puede ser nulo");
             request.getRequestDispatcher("vendedor/index.jsp").forward(request, response);

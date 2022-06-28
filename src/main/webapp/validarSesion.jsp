@@ -1,10 +1,6 @@
 <%
-    /*response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     response.setHeader("Pragma", "no-cache");
-    response.setDateHeader("Expires", 0);*/
-    
-    response.setHeader("Pragma", "No-cache");
-    response.setHeader("Cache-control", "no-cache,no-store,must-revalidate");
     response.setDateHeader("Expires", 0);
 
     //Obtenemos el arreglo de cookies
