@@ -49,7 +49,7 @@ public class VehiculoController extends HttpServlet {
                     case 2: // Listar vehiculos
                         this.listarVehiculos(request, response, categoria);
                     default:
-                        response.sendRedirect("vendedor/");
+                        response.sendRedirect("vendedor/index.jsp");
                         break;
                 }
             } else {

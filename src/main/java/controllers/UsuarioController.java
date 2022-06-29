@@ -2,11 +2,13 @@ package controllers;
 
 import dao.*;
 import domain.*;
-import java.io.IOException;
 import java.util.List;
 import javax.servlet.*;
-import javax.servlet.annotation.WebServlet;
+import java.util.logging.*;
+import java.io.IOException;
 import javax.servlet.http.*;
+import javax.mail.MessagingException;
+import javax.servlet.annotation.WebServlet;
 
 /**
  *
@@ -18,6 +20,7 @@ public class UsuarioController extends HttpServlet {
     private String server, port, mail, pass;
     private String asunto = "", mensaje = "";
 
+    @Override
     public void init() {
         ServletContext context = getServletContext();
         server = context.getInitParameter("server");
@@ -159,26 +162,25 @@ public class UsuarioController extends HttpServlet {
             userVo.setDatTelefono(request.getParameter("inputPhone"));
             userVo.setDatCorreo(emailUser);
 
-            asunto = "Bienvenido a la familia Control Vehiculos JAC";
-            System.out.println("userVo = " + userVo);
-            mensaje = "Es un placer que pertenezcas a esta gran familia. Bienvenido!!😀";
+            asunto = "Control Vehiculos JAC";
+            mensaje = "¡Bienvenido!\nAcabas de registrarte en nuestro sitio web, es un placer que pertenezcas a esta gran familia.";
 
             if (usuarioDao.existeEmailEnBD(usuarioVo.getUsuLogin())) {
                 this.redirigir(request, response, emailUser, password, "El nombre de usuario ya se encuentra registrado, pruebe con otro");
             } else {
                 if (usuarioDao.insert(userVo)) {
-//                    try {
-//                        SendMail.sendMail(server, port, mail, pass, emailUser, asunto, mensaje);
-                    if (sesion.getAttribute("usuario") != null) {
-                        request.setAttribute("mensajeOperacion", "Usuario agregado exitosamente");
-                        request.getRequestDispatcher("vendedor/index.jsp").forward(request, response);
-                    } else {
-                        this.login(request, response, emailUser, password);
+                    try {
+                        SendMail.sendMail(server, port, mail, pass, emailUser, asunto, mensaje);
+                        if (sesion.getAttribute("usuario") != null) {
+                            request.setAttribute("mensajeOperacion", "Usuario agregado exitosamente");
+                            request.getRequestDispatcher("vendedor/index.jsp").forward(request, response);
+                        } else {
+                            this.login(request, response, emailUser, password);
+                        }
+                    } catch (MessagingException ex) {
+                        System.out.println("Error al enviar el correo e iniciar sesión");
+                        Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-//                    } catch (MessagingException ex) {
-//                        System.out.println("Error al enviar el correo e iniciar sesión");
-//                        Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
                 } else {
                     this.redirigir(request, response, emailUser, password, "Ocurrio un error al registrar el usuario");
                 }

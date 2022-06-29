@@ -1,11 +1,7 @@
 package util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.*;
+import java.util.logging.*;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -44,7 +40,7 @@ public class Conexion {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public static void close(PreparedStatement stmt) {
         try {
             stmt.close();
@@ -53,7 +49,7 @@ public class Conexion {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public static void close(Connection conn) {
         try {
             conn.close();

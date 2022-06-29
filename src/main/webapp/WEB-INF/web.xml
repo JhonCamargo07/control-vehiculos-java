@@ -13,7 +13,7 @@
         <param-value>587</param-value>
     </context-param>
     <context-param>
-        <param-name>user</param-name>
+        <param-name>mail</param-name>
         <param-value>practicasjhoncamargo@gmail.com</param-value>
     </context-param>
     <context-param>
