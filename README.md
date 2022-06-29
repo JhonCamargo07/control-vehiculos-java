@@ -1,8 +1,8 @@
 # Control de vehiculos
 
-Programa para el control de vehiculos, registro y muestra de estos.
+Programa para el control de vehiculos, registro y muestra de estos. 
 
-**Previsualizacion**
+**Previsualizacion de la página principal**
 
 ![Index del aplicativo](visualizacion.png)
 
